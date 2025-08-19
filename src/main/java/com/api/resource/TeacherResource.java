@@ -20,48 +20,47 @@ public class TeacherResource {
 	 
 	 private final TeacherService teacherService = new TeacherService(teacherRepository, subjectRepository);
 	 
-    // Get all teachers
+    
     @GET
     public List<Teacher> getAllTeachers() {
         return teacherService.getAllTeachers();
     }
 
-    // Get teacher by ID
+   
     @GET
     @Path("/{id}")
     public Teacher getTeacherById(@PathParam("id") int id) {
         return teacherService.getTeacherById(id);
     }
 
-    // Create a new teacher
+    
     @POST
     public Teacher createTeacher(Teacher teacher) {
         return teacherService.createTeacher(teacher);
     }
 
-    // Update teacher by ID
+   
     @PUT
     @Path("/{id}")
     public Teacher updateTeacher(@PathParam("id") int id, Teacher teacher) {
         return teacherService.updateTeacher(id, teacher);
     }
 
-    // Delete teacher by ID
+    
     @DELETE
     @Path("/{id}")
     public Response deleteTeacher(@PathParam("id") int id) {
         teacherService.deleteTeacher(id);
-        return Response.noContent().build(); // HTTP 204
+        return Response.noContent().build();
     }
 
-    // Assign subject to teacher
+   
     @POST
     @Path("/{teacherId}/assign-subject/{subjectId}")
     public Teacher assignSubject(@PathParam("teacherId") int teacherId, @PathParam("subjectId") int subjectId) {
         return teacherService.assignSubjectToTeacher(teacherId, subjectId);
     }
 
-    // Update teacher subjects
     @PUT
     @Path("/{teacherId}/update-subject/{subjectId}")
     public Teacher updateTeacherSubjects(@PathParam("teacherId") int teacherId, @PathParam("subjectId") int subjectId) {
@@ -69,7 +68,7 @@ public class TeacherResource {
     }
 
 
-    // Replace a subject with another for a teacher
+   
     @PUT
     @Path("/{teacherId}/replace-subject")
     public Teacher replaceSubject(@PathParam("teacherId") int teacherId, @QueryParam("oldSubjectId") int oldSubjectId, @QueryParam("newSubjectId") int newSubjectId) {

@@ -22,33 +22,33 @@ public class StudentResource {
     
     private final StudentService studentService = new StudentService(studentRepository, teacherRepository, subjectRepository);
 
-    // Get all students
+   
     @GET
     public List<Student> getAllStudents() {
         return studentService.getAllStudents();
     }
 
-    // Get student by ID
+    
     @GET
     @Path("/{id}")
     public Student getStudentById(@PathParam("id") int id) {
         return studentService.getStudentById(id);
     }
 
-    // Create a new student
+    
     @POST
     public Student createStudent(Student student) {
         return studentService.createStudent(student);
     }
 
-    // Update student by ID
+   
     @PUT
     @Path("/{id}")
     public Student updateStudent(@PathParam("id") int id, Student student) {
         return studentService.updateStudent(id, student);
     }
 
-    // Delete student by ID
+   
     @DELETE
     @Path("/{id}")
     public Response deleteStudent(@PathParam("id") int id) {
@@ -56,21 +56,21 @@ public class StudentResource {
         return Response.noContent().build();
     }
 
-    // Assign teacher to student
+    
     @POST
     @Path("/{studentId}/assign-teacher/{teacherId}")
     public Student assignTeacher(@PathParam("studentId") int studentId, @PathParam("teacherId") int teacherId) {
         return studentService.assignTeacherToStudent(studentId, teacherId);
     }
 
-    // Assign subject to student
+   
     @POST
     @Path("/{studentId}/assign-subject/{subjectId}")
     public Student assignSubject(@PathParam("studentId") int studentId, @PathParam("subjectId") int subjectId) {
         return studentService.assignSubjectToStudent(studentId, subjectId);
     }
 
-    // Add multiple subjects to student by name
+    
     @PUT
     @Path("/{studentId}/subjects-by-name")
     public Student addSubjectsToStudentByName(@PathParam("studentId") int studentId, List<String> subjectNames) {

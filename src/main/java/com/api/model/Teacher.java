@@ -5,6 +5,7 @@ package com.api.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -30,6 +31,8 @@ public class Teacher {
 	int teacher_id;
 	@Column(nullable = false)
 	String name;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	LocalDate hire_date;
 	
 	@ManyToMany(mappedBy = "teacher")

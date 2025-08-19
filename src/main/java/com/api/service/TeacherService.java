@@ -69,22 +69,28 @@ public class TeacherService {
     public Teacher replaceSubjectForTeacher(int teacherId, int oldSubjectId, int newSubjectId) {
         Teacher teacher = getTeacherById(teacherId);
 
-        Subject oldSubject = teacher.getSubject()
-                                    .stream()
-                                    .filter(s -> s.getSubject_id() == oldSubjectId)
-                                    .findFirst()
-                                    .orElse(null);
+        Subject oldSubject = null;
+        for (Subject s : teacher.getSubject()) {
+            if (s.getSubject_id() == oldSubjectId) {
+                oldSubject = s;
+                break;
+            }
+        }
 
         if (oldSubject != null) {
             teacher.getSubject().remove(oldSubject);
         }
 
+        // load new subject
         Subject newSubject = subjectRepository.findById(newSubjectId);
         if (newSubject == null) {
             throw new RuntimeException("New subject not found");
         }
 
+        // add new subject
         teacher.getSubject().add(newSubject);
+
         return teacherRepository.save(teacher);
     }
+
 }
