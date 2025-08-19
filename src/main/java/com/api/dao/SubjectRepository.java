@@ -29,12 +29,15 @@ public class SubjectRepository {
 
     public List<Subject> findAll() {
         EntityManager em = EMFProvider.getEntityManager();
-        List<Subject> list = em.createQuery(
-            "SELECT DISTINCT s FROM Subject s LEFT JOIN FETCH s.student", Subject.class)
-            .getResultList();
-        em.close();
-        return list;
+        try {
+            return em.createQuery(
+                "SELECT DISTINCT s FROM Subject s " + "LEFT JOIN FETCH s.student " + "LEFT JOIN FETCH s.teacher", Subject.class)
+                .getResultList();
+        } finally {
+            em.close();
+        }
     }
+
 
     public Subject findByName(String name) {
         EntityManager em = EMFProvider.getEntityManager();

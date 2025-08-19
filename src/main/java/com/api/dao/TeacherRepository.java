@@ -22,19 +22,33 @@ public class TeacherRepository {
 
     public Teacher findById(int id) {
         EntityManager em = EMFProvider.getEntityManager();
-        Teacher teacher = em.find(Teacher.class, id);
-        em.close();
-        return teacher;
+        try {
+            return em.createQuery(
+                "SELECT t FROM Teacher t " +
+                "LEFT JOIN FETCH t.subject " +
+                "LEFT JOIN FETCH t.student " +
+                "WHERE t.teacher_id = :id", Teacher.class)
+                .setParameter("id", id)
+                .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        } finally {
+            em.close();
+        }
     }
+
 
     public List<Teacher> findAll() {
         EntityManager em = EMFProvider.getEntityManager();
-        List<Teacher> list = em.createQuery(
-            "SELECT DISTINCT t FROM Teacher t LEFT JOIN FETCH t.student", Teacher.class)
-            .getResultList();
-        em.close();
-        return list;
+        try {
+            return em.createQuery(
+                "SELECT DISTINCT t FROM Teacher t " + "LEFT JOIN FETCH t.subject " + "LEFT JOIN FETCH t.student", Teacher.class)
+                .getResultList();
+        } finally {
+            em.close();
+        }
     }
+
 
 
     public Teacher findByName(String name) {

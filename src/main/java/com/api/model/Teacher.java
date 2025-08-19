@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.time.LocalDate;
@@ -36,6 +37,7 @@ public class Teacher {
 	LocalDate hire_date;
 	
 	@ManyToMany(mappedBy = "teacher")
+	@JsonIgnore
 	private Set<Student> student = new HashSet<>();
 	
 	@ManyToMany
