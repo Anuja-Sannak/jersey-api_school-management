@@ -20,10 +20,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 
-@JsonIdentityInfo(
+/*@JsonIdentityInfo(
 	    generator = ObjectIdGenerators.PropertyGenerator.class,
 	    property = "teacher_id"
-	)
+	)*/
 @Entity
 
 public class Teacher {

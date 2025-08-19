@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
@@ -17,10 +18,10 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 
 
-@JsonIdentityInfo(
+/*@JsonIdentityInfo(
 	    generator = ObjectIdGenerators.PropertyGenerator.class,
 	    property = "student_id"
-	)
+	)*/
 @Entity
 public class Student {
 	
@@ -37,12 +38,14 @@ public class Student {
 	@JoinTable(name = "Student_Teacher",
 			joinColumns = @JoinColumn(name= "student_id"),
 			inverseJoinColumns = @JoinColumn(name = "teacher_id"))
+	
 	private Set<Teacher> teacher = new HashSet<>();
 	
 	@ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "Student_Subject",
         joinColumns = @JoinColumn(name = "student_id"),
         inverseJoinColumns = @JoinColumn(name = "subject_id"))
+	
     private Set<Subject> subject = new HashSet<>();
 	
 	

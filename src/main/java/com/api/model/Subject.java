@@ -16,10 +16,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 
 
-@JsonIdentityInfo(
+/*@JsonIdentityInfo(
 	    generator = ObjectIdGenerators.PropertyGenerator.class,
 	    property = "subject_id"
-	)
+	)*/
 @Entity
 public class Subject {
 	@Id
