@@ -3,11 +3,14 @@ package com.api.resource;
 
 import java.util.List;
 
+
 import com.api.dao.*;
 import com.api.model.Student;
 import com.api.service.*;
 
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.container.AsyncResponse;
+import jakarta.ws.rs.container.Suspended;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -23,57 +26,126 @@ public class StudentResource {
     private final StudentService studentService = new StudentService(studentRepository, teacherRepository, subjectRepository);
 
    
-    @GET
-    public List<Student> getAllStudents() {
-        return studentService.getAllStudents();
+/*    @GET
+    public void getAllStudents(@Suspended final AsyncResponse asyncResponse) {
+        CompletableFuture.supplyAsync(() -> studentService.getAllStudents())
+        .thenAccept(students -> asyncResponse.resume(Response.ok(students).build()))
+        .exceptionally(e -> {
+        	asyncResponse.resume(Response.serverError().entity(e.getMessage()).build());
+        	return null;
+        });   	
     }
-
+  */  
+@GET
+    public void getAllStudents(@Suspended final AsyncResponse asyncResponse) {
+        new Thread(() -> {
+            try {
+                List<Student> students = studentService.getAllStudents();
+                asyncResponse.resume(Response.ok(students).build());
+            } catch (Exception e) {
+                asyncResponse.resume(Response.serverError().entity(e.getMessage()).build());
+            }
+        }).start();
+   }
     
     @GET
     @Path("/{id}")
-    public Student getStudentById(@PathParam("id") int id) {
-        return studentService.getStudentById(id);
+    public void getStudentById(@PathParam("id") int id,  @Suspended final AsyncResponse asyncResponse) {
+    	new Thread(() -> {
+            try {
+                Student student = studentService.getStudentById(id);
+                asyncResponse.resume(Response.ok(student).build());
+            } catch (Exception e) {
+                asyncResponse.resume(Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build());
+            }
+        }).start();
     }
 
     
     @POST
-    public Student createStudent(Student student) {
-        return studentService.createStudent(student);
+    public void createStudent(Student student,  @Suspended final AsyncResponse asyncResponse) {
+    	new Thread(() -> {
+            try {
+                Student createdStudent = studentService.createStudent(student);
+                asyncResponse.resume(Response.status(Response.Status.CREATED).entity(createdStudent).build());
+            } catch (Exception e) {
+                asyncResponse.resume(Response.serverError().entity(e.getMessage()).build());
+            }
+        }).start();
     }
 
    
     @PUT
     @Path("/{id}")
-    public Student updateStudent(@PathParam("id") int id, Student student) {
-        return studentService.updateStudent(id, student);
+    public void updateStudent(@PathParam("id") int id, Student student,@Suspended final AsyncResponse asyncResponse) {
+    	new Thread(() -> {
+            try {
+                Student updatedStudent = studentService.updateStudent(id, student);
+                asyncResponse.resume(Response.ok(updatedStudent).build());
+            } catch (Exception e) {
+                asyncResponse.resume(Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build());
+            }
+        }).start();
     }
 
    
     @DELETE
     @Path("/{id}")
-    public Response deleteStudent(@PathParam("id") int id) {
-        studentService.deleteStudent(id);
-        return Response.noContent().build();
+    public void deleteStudent(@PathParam("id") int id, @Suspended final AsyncResponse asyncResponse) {
+        new Thread(() -> {
+            try {
+                studentService.deleteStudent(id);
+                asyncResponse.resume(Response.noContent().build());
+            } catch (Exception e) {
+                asyncResponse.resume(Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build());
+            }
+        }).start();
     }
 
     
     @POST
     @Path("/{studentId}/assign-teacher/{teacherId}")
-    public Student assignTeacher(@PathParam("studentId") int studentId, @PathParam("teacherId") int teacherId) {
-        return studentService.assignTeacherToStudent(studentId, teacherId);
+    public void assignTeacher(@PathParam("studentId") int studentId, @PathParam("teacherId") int teacherId, 
+    		@Suspended final AsyncResponse asyncResponse) {
+    	
+    	new Thread(() -> {
+            try {
+                Student student = studentService.assignTeacherToStudent(studentId, teacherId);
+                asyncResponse.resume(Response.ok(student).build());
+            } catch (Exception e) {
+                asyncResponse.resume(Response.serverError().entity(e.getMessage()).build());
+            }
+        }).start();
+       
     }
 
    
     @POST
     @Path("/{studentId}/assign-subject/{subjectId}")
-    public Student assignSubject(@PathParam("studentId") int studentId, @PathParam("subjectId") int subjectId) {
-        return studentService.assignSubjectToStudent(studentId, subjectId);
+    public void assignSubject(@PathParam("studentId") int studentId, @PathParam("subjectId") int subjectId,
+                              @Suspended final AsyncResponse asyncResponse) {
+        new Thread(() -> {
+            try {
+                Student student = studentService.assignSubjectToStudent(studentId, subjectId);
+                asyncResponse.resume(Response.ok(student).build());
+            } catch (Exception e) {
+                asyncResponse.resume(Response.serverError().entity(e.getMessage()).build());
+            }
+        }).start();
     }
 
     
     @PUT
     @Path("/{studentId}/subjects-by-name")
-    public Student addSubjectsToStudentByName(@PathParam("studentId") int studentId, List<String> subjectNames) {
-        return studentService.addSubjectsToStudent(studentId, subjectNames);
+    public void addSubjectsToStudentByName(@PathParam("studentId") int studentId, List<String> subjectNames,
+                                           @Suspended final AsyncResponse asyncResponse) {
+        new Thread(() -> {
+            try {
+                Student student = studentService.addSubjectsToStudent(studentId, subjectNames);
+                asyncResponse.resume(Response.ok(student).build());
+            } catch (Exception e) {
+                asyncResponse.resume(Response.serverError().entity(e.getMessage()).build());
+            }
+        }).start();
     }
 }

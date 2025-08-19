@@ -6,9 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.time.LocalDate;
 import jakarta.persistence.Column;
@@ -44,7 +42,7 @@ public class Teacher {
 	@JoinTable(name = "Subject_Teacher",
 			joinColumns = @JoinColumn(name = "teacher_id"),
 			inverseJoinColumns = @JoinColumn(name = "subject_id"))
-	
+	@JsonIgnore
 	private Set<Subject> subject = new HashSet<>();
 	
 	public Teacher() {
