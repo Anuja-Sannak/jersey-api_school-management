@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.time.LocalDate;
@@ -96,9 +95,6 @@ public class Teacher {
 		this.subject = subject;
 	}
 
-	public Teacher orElse(Object object) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 	
 }
