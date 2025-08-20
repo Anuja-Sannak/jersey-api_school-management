@@ -3,7 +3,8 @@ package com.api.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,11 +24,11 @@ public class Subject {
 	String name;
 	
 	@ManyToMany(mappedBy = "subject")
-	@JsonBackReference
+	@JsonIgnore
 	private Set<Student> student = new HashSet<>();
 	
 	@ManyToMany(mappedBy = "subject")
-	@JsonBackReference
+	@JsonIgnore
 	private Set<Teacher> teacher = new HashSet<>();
 	
 	public int getSubject_id() {

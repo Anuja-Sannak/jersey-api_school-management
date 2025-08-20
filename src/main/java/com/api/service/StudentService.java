@@ -90,11 +90,13 @@ public class StudentService {
         for (String subjectName : subjectNames) {
             Subject subject = subjectRepository.findByName(subjectName);
             if (subject == null) {
-                throw new RuntimeException("Subject not found: " + subjectName);
+                throw new RuntimeException("Subject not found");
             }
             student.getSubject().add(subject);
         }
 
         return studentRepository.save(student);
     }
+    
+    
 }

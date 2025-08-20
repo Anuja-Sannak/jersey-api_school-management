@@ -5,9 +5,10 @@ package com.api.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 import java.time.LocalDate;
 import jakarta.persistence.Column;
@@ -33,14 +34,14 @@ public class Teacher {
 	LocalDate hire_date;
 	
 	@ManyToMany(mappedBy = "teacher")
-	@JsonBackReference
+	@JsonIgnore
 	private Set<Student> student = new HashSet<>();
 	
 	@ManyToMany
 	@JoinTable(name = "Subject_Teacher",
 			joinColumns = @JoinColumn(name = "teacher_id"),
 			inverseJoinColumns = @JoinColumn(name = "subject_id"))
-	@JsonManagedReference
+	
 	private Set<Subject> subject = new HashSet<>();
 	
 	public Teacher() {

@@ -21,64 +21,64 @@ public class SubjectResource {
 
     @GET
     public void getAllSubjects(@Suspended final AsyncResponse asyncResponse) {
-    	new Thread(() -> {
+    	 AppExecutor.getExecutor().submit(() -> {
             try {
                 List<Subject> subjects = subjectService.getAllSubjects();
                 asyncResponse.resume(Response.ok(subjects).build());
             } catch (Exception e) {
                 asyncResponse.resume(Response.serverError().entity(e.getMessage()).build());
             }
-        }).start();
+        });
     }
 
     @GET
     @Path("/{id}")
     public void getSubjectById(@PathParam("id") int id, @Suspended final AsyncResponse asyncResponse) {
-    	new Thread(() -> {
+    	 AppExecutor.getExecutor().submit(() -> {
             try {
                 Subject subject = subjectService.getSubjectById(id);
                 asyncResponse.resume(Response.ok(subject).build());
             } catch (Exception e) {
                 asyncResponse.resume(Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build());
             }
-        }).start();
+        });
     }
 
     @POST
     public void createSubject(Subject subject, @Suspended final AsyncResponse asyncResponse) {
-    	new Thread(() -> {
+    	 AppExecutor.getExecutor().submit(() -> {
             try {
                 Subject subjects = subjectService.createSubject(subject);
                 asyncResponse.resume(Response.ok(subjects).build());
             } catch (Exception e) {
                 asyncResponse.resume(Response.serverError().entity(e.getMessage()).build());
             }
-        }).start();
+        });
     }
 
     @PUT
     @Path("/{id}")
     public void updateSubject(@PathParam("id") int id, Subject subject, @Suspended final AsyncResponse asyncResponse) {
-    	new Thread(() -> {
+    	 AppExecutor.getExecutor().submit(() -> {
             try {
             	Subject updatedSubject = subjectService.updateSubject(id, subject);
                 asyncResponse.resume(Response.ok(updatedSubject).build());
             } catch (Exception e) {
                 asyncResponse.resume(Response.serverError().entity(e.getMessage()).build());
             }
-        }).start();
+        });
     }
 
     @DELETE
     @Path("/{id}")
     public void deleteSubject(@PathParam("id") int id, @Suspended final AsyncResponse asyncResponse) {
-        new Thread(() -> {
+    	 AppExecutor.getExecutor().submit(() -> {
             try {
                 subjectService.deleteSubject(id);
                 asyncResponse.resume(Response.noContent().build());
             } catch (Exception e) {
                 asyncResponse.resume(Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build());
             }
-        }).start();
+        });
     }
 }
