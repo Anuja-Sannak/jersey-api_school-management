@@ -8,7 +8,6 @@ public class EMFProvider {
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("schoolPU");
 
     private EMFProvider() {
-        // private constructor to prevent instantiation
     }
 
     public static EntityManager getEntityManager() {

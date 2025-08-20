@@ -42,23 +42,24 @@ public class TeacherRepository {
         EntityManager em = EMFProvider.getEntityManager();
         try {
             return em.createQuery(
-                "SELECT DISTINCT t FROM Teacher t " + "LEFT JOIN FETCH t.subject " + "LEFT JOIN FETCH t.student", Teacher.class)
+                "SELECT DISTINCT t FROM Teacher t LEFT JOIN FETCH t.subject LEFT JOIN FETCH t.student", Teacher.class)
                 .getResultList();
         } finally {
             em.close();
         }
     }
 
-
-
     public Teacher findByName(String name) {
-        EntityManager em = EMFProvider.getEntityManager();
-        List<Teacher> list = em.createQuery("SELECT t FROM Teacher t WHERE t.name = :name", Teacher.class)
-                               .setParameter("name", name)
-                               .getResultList();
-        em.close();
-        return list.isEmpty() ? null : list.get(0);
-    }
+    	
+    	EntityManager em = EMFProvider.getEntityManager();
+    	List<Teacher> list = em.createQuery("SELECT DISTINCT t FROM Teacher t  LEFT JOIN FETCH t.subject LEFT JOIN FETCH t.student "
+			+ "WHERE t.name = :name", Teacher.class).setParameter("name", name).getResultList();
+	
+    	em.clear();
+    	return list.isEmpty()? null : list.get(0);
+
+}
+    
 
     public void deleteById(int id) {
         EntityManager em = EMFProvider.getEntityManager();

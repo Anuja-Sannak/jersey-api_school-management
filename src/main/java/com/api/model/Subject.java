@@ -3,10 +3,7 @@ package com.api.model;
 import java.util.HashSet;
 import java.util.Set;
 
-
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,10 +13,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 
 
-/*@JsonIdentityInfo(
-	    generator = ObjectIdGenerators.PropertyGenerator.class,
-	    property = "subject_id"
-	)*/
 @Entity
 public class Subject {
 	@Id
@@ -30,11 +23,11 @@ public class Subject {
 	String name;
 	
 	@ManyToMany(mappedBy = "subject")
-	@JsonIgnore
+	@JsonBackReference
 	private Set<Student> student = new HashSet<>();
 	
 	@ManyToMany(mappedBy = "subject")
-	@JsonIgnore
+	@JsonBackReference
 	private Set<Teacher> teacher = new HashSet<>();
 	
 	public int getSubject_id() {

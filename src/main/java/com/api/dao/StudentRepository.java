@@ -32,16 +32,19 @@ public class StudentRepository {
         return student;
     }
 
+        
     public List<Student> findAll() {
         EntityManager em = EMFProvider.getEntityManager();
         List<Student> list = em.createQuery(
             "SELECT DISTINCT s FROM Student s " +
-            "LEFT JOIN FETCH s.teacher " +
-            "LEFT JOIN FETCH s.subject", Student.class)
+            "LEFT JOIN FETCH s.teacher t " +
+            "LEFT JOIN FETCH t.subject " + // fetch subjects of teachers
+            "LEFT JOIN FETCH s.subject", Student.class) // fetch student subjects
             .getResultList();
         em.close();
         return list;
     }
+
 
     public Student findByName(String name) {
         EntityManager em = EMFProvider.getEntityManager();
