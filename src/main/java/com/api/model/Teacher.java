@@ -23,7 +23,7 @@ import jakarta.persistence.ManyToMany;
 
 @Entity
 
-public class Teacher {
+public class Teacher{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int teacher_id;

@@ -1,0 +1,16 @@
+com\api\service\TeacherService.class
+com\api\dao\StudentRepository.class
+com\api\dao\SubjectRepository.class
+com\api\listener\AppEventListener.class
+com\api\model\Subject.class
+com\api\resource\SubjectResource.class
+com\api\model\Teacher.class
+com\api\service\StudentService.class
+com\api\MyApplication.class
+com\api\dao\TeacherRepository.class
+com\api\dao\EMFProvider.class
+com\api\resource\TeacherResource.class
+com\api\service\SubjectService.class
+com\api\model\Student.class
+com\api\resource\StudentResource.class
+com\api\resource\AppExecutor.class

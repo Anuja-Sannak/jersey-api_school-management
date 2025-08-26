@@ -15,7 +15,7 @@ import jakarta.persistence.ManyToMany;
 
 
 @Entity
-public class Subject {
+public class Subject{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int subject_id;

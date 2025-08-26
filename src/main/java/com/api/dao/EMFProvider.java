@@ -5,7 +5,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 public class EMFProvider {
-    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("schoolPU");
+    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("school");
 
     private EMFProvider() {
     }

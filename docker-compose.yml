@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+  mysql-service:
+    image: mysql:8.0
+    container_name: mysql-container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: school_database
+      MYSQL_USER: school_user
+      MYSQL_PASSWORD: school_pass	
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin","ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - school-net
+
+  jersey-api:
+    build: .
+    container_name: jersey-api-container
+    restart: always
+    depends_on:
+      mysql-service:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    networks:
+      - school-net
+volumes:
+  mysql_data:
+
+networks:
+  school-net:
+    driver: bridge
+  

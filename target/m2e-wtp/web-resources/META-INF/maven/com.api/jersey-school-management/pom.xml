@@ -9,8 +9,8 @@
 
    <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>8</maven.compiler.source>
-    <maven.compiler.target>8</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
   </properties>
 
   <dependencies>
@@ -33,6 +33,13 @@
 	    <artifactId>mysql-connector-java</artifactId>
 	    <version>8.0.31</version>
 	</dependency>
+
+<dependency>
+  <groupId>jakarta.servlet</groupId>
+  <artifactId>jakarta.servlet-api</artifactId>
+  <version>6.0.0</version>
+ 
+</dependency>
 
     
     <dependency>
@@ -67,6 +74,16 @@
 
 
   </dependencies>
+<build>
+    <finalName>School-Management</finalName>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>3.3.2</version>
+        </plugin>
+    </plugins>
+</build>
 
 
 </project>
