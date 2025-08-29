@@ -81,16 +81,25 @@ public class TeacherService {
             teacher.getSubject().remove(oldSubject);
         }
 
-        // load new subject
+        
         Subject newSubject = subjectRepository.findById(newSubjectId);
         if (newSubject == null) {
             throw new RuntimeException("New subject not found");
         }
 
-        // add new subject
+        
         teacher.getSubject().add(newSubject);
 
         return teacherRepository.save(teacher);
+    }
+
+    
+    public List<Teacher> getTeachersByName(String name) {
+        List<Teacher> teachers = teacherRepository.findTeachersByName(name);
+        if (teachers == null || teachers.isEmpty()) {
+            throw new RuntimeException("No teachers found with name: " + name);
+        }
+        return teachers;
     }
 
 }

@@ -1,8 +1,15 @@
 package com.api.dao;
 
+
 import com.api.model.Teacher;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaDelete;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Root;
+
 import java.util.List;
 
 public class TeacherRepository {
@@ -20,6 +27,7 @@ public class TeacherRepository {
         return teacher;
     }
 
+/*
     public Teacher findById(int id) {
         EntityManager em = EMFProvider.getEntityManager();
         try {
@@ -36,9 +44,26 @@ public class TeacherRepository {
             em.close();
         }
     }
+    */
+    
+    public Teacher findById(int id) {
+    	EntityManager em = EMFProvider.getEntityManager();
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Teacher> criteriaQuery = criteriaBuilder.createQuery(Teacher.class);
+        
+        Root<Teacher> teacher = criteriaQuery.from(Teacher.class);
+        teacher.fetch("subject",JoinType.LEFT);
+        teacher.fetch("student", JoinType.LEFT);
+        
+        criteriaQuery.select(teacher).where(criteriaBuilder.equal(teacher.get("teacher_id"), id));
+        Teacher result =em.createQuery(criteriaQuery).getSingleResult();
+        em.close();
+        
+        return result;
+    }
 
 
-    public List<Teacher> findAll() {
+ /*  public List<Teacher> findAll() {
         EntityManager em = EMFProvider.getEntityManager();
         try {
             return em.createQuery(
@@ -48,8 +73,26 @@ public class TeacherRepository {
             em.close();
         }
     }
-
-    public Teacher findByName(String name) {
+*/
+    
+   public List<Teacher> findAll(){
+	   EntityManager em = EMFProvider.getEntityManager();
+       CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+       CriteriaQuery<Teacher> criteriaQuery = criteriaBuilder.createQuery(Teacher.class);
+       
+       Root<Teacher> teacher = criteriaQuery.from(Teacher.class);
+       teacher.fetch("subject",JoinType.LEFT);
+       teacher.fetch("student", JoinType.LEFT);
+       criteriaQuery.select(teacher).distinct(true);
+       
+       List<Teacher> result = em.createQuery(criteriaQuery).getResultList();
+       
+       em.close();
+       
+       return result;
+   }
+    
+ /*   public Teacher findByName(String name) {
     	
     	EntityManager em = EMFProvider.getEntityManager();
     	List<Teacher> list = em.createQuery("SELECT DISTINCT t FROM Teacher t  LEFT JOIN FETCH t.subject LEFT JOIN FETCH t.student "
@@ -58,10 +101,47 @@ public class TeacherRepository {
     	em.clear();
     	return list.isEmpty()? null : list.get(0);
 
-}
+}*/
+   
+   
+   public Teacher findByName(String name) {
+	   EntityManager em = EMFProvider.getEntityManager();
+       CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+       CriteriaQuery<Teacher> criteriaQuery = criteriaBuilder.createQuery(Teacher.class);
+       
+       Root<Teacher> teacher = criteriaQuery.from(Teacher.class);
+       teacher.fetch("subject",JoinType.LEFT);
+       teacher.fetch("student", JoinType.LEFT);
+       
+       criteriaQuery.select(teacher).distinct(true).where(criteriaBuilder.equal(teacher.get("name"), name));
+       Teacher result =em.createQuery(criteriaQuery).getSingleResult();
+       em.close();
+       
+       return result;
+   }
+   
+   public List<Teacher> findTeachersByName(String name) {
+	    EntityManager em = EMFProvider.getEntityManager();
+	    CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+	    CriteriaQuery<Teacher> criteriaQuery = criteriaBuilder.createQuery(Teacher.class);
+
+	    Root<Teacher> teacher = criteriaQuery.from(Teacher.class);
+	    teacher.fetch("subject", JoinType.LEFT);
+	    teacher.fetch("student", JoinType.LEFT);
+
+	    criteriaQuery.select(teacher)
+	                 .distinct(true)
+	                 .where(criteriaBuilder.equal(teacher.get("name"), name));
+
+	    List<Teacher> results = em.createQuery(criteriaQuery).getResultList();
+	    em.close();
+
+	    return results;
+	}
+
     
 
-    public void deleteById(int id) {
+/*    public void deleteById(int id) {
         EntityManager em = EMFProvider.getEntityManager();
         em.getTransaction().begin();
         Teacher t = em.find(Teacher.class, id);
@@ -69,4 +149,24 @@ public class TeacherRepository {
         em.getTransaction().commit();
         em.close();
     }
+    */
+   
+  
+   
+   public void deleteById(int id) {
+	   
+	   EntityManager em = EMFProvider.getEntityManager();
+	   em.getTransaction().begin();
+	   
+       CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+       
+       CriteriaDelete<Teacher> criteriaDelete =criteriaBuilder.createCriteriaDelete(Teacher.class);
+       Root<Teacher> teacher = criteriaDelete.from(Teacher.class);  
+       criteriaDelete.where(criteriaBuilder.equal(teacher.get("teacher_id"),id));
+       
+       em.createQuery(criteriaDelete).executeUpdate();
+       em.getTransaction().commit();
+       em.close();
+	   
+   }
 }

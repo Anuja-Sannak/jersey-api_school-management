@@ -3,6 +3,7 @@ package com.api.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,19 +28,19 @@ public class Student{
 	
 	String address;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "Student_Teacher",
 			joinColumns = @JoinColumn(name= "student_id"),
 			inverseJoinColumns = @JoinColumn(name = "teacher_id"))
-	
+	@JsonManagedReference
 	private Set<Teacher> teacher = new HashSet<>();
 	
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "Student_Subject",
         joinColumns = @JoinColumn(name = "student_id"),
         inverseJoinColumns = @JoinColumn(name = "subject_id"))
-	
+	@JsonManagedReference
     private Set<Subject> subject = new HashSet<>();
 	
 	

@@ -21,8 +21,8 @@ public class StudentService {
         this.subjectRepository = subjectRepository;
     }
 
-    public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+    public List<Student> getAllStudents(int page,int size) {
+        return studentRepository.findAll(page, size);
     }
 
     public Student getStudentById(int id) {
@@ -37,6 +37,10 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
+    public long getTotalStudents() {
+        return studentRepository.count();
+    }
+    
     public void deleteStudent(int id) {
         studentRepository.deleteById(id);
     }
@@ -98,5 +102,14 @@ public class StudentService {
         return studentRepository.save(student);
     }
     
+    public List<Student> getStudentsByName(String name) {
+        List<Student> students = studentRepository.findAllStudentsByName(name);
+        if (students.isEmpty()) {
+            throw new RuntimeException("No students found with name: " + name);
+        }
+        return students;
+    }
     
+    
+
 }

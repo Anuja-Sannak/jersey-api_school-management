@@ -2,13 +2,13 @@ package com.api.resource;
 
 
 import java.util.List;
+import java.util.Map;
 
-
-import com.api.dao.*;
-
-import com.api.model.Student;
+import com.api.dao.StudentRepository;
+import com.api.dao.SubjectRepository;
+import com.api.dao.TeacherRepository;
 import com.api.service.*;
-
+import com.api.model.*;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.container.AsyncResponse;
 import jakarta.ws.rs.container.Suspended;
@@ -31,19 +31,52 @@ public class StudentResource {
    
 
 @GET
-    public void getAllStudents(@Suspended final AsyncResponse asyncResponse) {
+    public void getAllStudents(@QueryParam("page") @DefaultValue("1") int page, 
+    							@Suspended final AsyncResponse asyncResponse) {
         AppExecutor.getExecutor().submit(() -> {
             try {
-                List<Student> students = studentService.getAllStudents();
-                asyncResponse.resume(Response.ok(students).build());
+            		int size = 5;
+            		
+            	
+                List<Student> students = studentService.getAllStudents(page, size);
+                
+                
+                long total = studentService.getTotalStudents();
+                long totalPages = (long) Math.ceil((double) total / size);
+
+                asyncResponse.resume(Response.ok(
+                        Map.of(
+                                "page", page,
+                                "size", size,
+                                "total", total,
+                                "totalPages", totalPages,
+                                "students", students
+                        )
+                ).build());
             } catch (Exception e) {
                 asyncResponse.resume(Response.serverError().entity(e.getMessage()).build());
             }
         });
    }
+
+@GET
+@Path("/by-name/{name}")
+@Produces(MediaType.APPLICATION_JSON)
+public void getStudentsByName(@PathParam("name") String name, 
+                              @Suspended final AsyncResponse asyncResponse) {
+    AppExecutor.getExecutor().submit(() -> {
+        try {
+            List<Student> students = studentService.getStudentsByName(name);
+            asyncResponse.resume(Response.ok(students).build());
+        } catch (Exception e) {
+            asyncResponse.resume(Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build());
+        }
+    });
+}
+
     
     @GET
-    @Path("/{id}")
+    @Path("/{id:\\d+}")
     public void getStudentById(@PathParam("id") int id,  @Suspended final AsyncResponse asyncResponse) {
     	 AppExecutor.getExecutor().submit(() -> {
             try {
@@ -142,4 +175,8 @@ public class StudentResource {
             }
         });
     }
+    
+    
+   
+
 }

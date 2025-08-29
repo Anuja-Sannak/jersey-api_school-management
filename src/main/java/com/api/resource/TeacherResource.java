@@ -136,5 +136,17 @@ public class TeacherResource {
         });
     }
     
-    
+    @GET
+    @Path("/search")
+    public void getTeachersByName(@QueryParam("name") String name, @Suspended final AsyncResponse asyncResponse) {
+        AppExecutor.getExecutor().submit(() -> {
+            try {
+                List<Teacher> teachers = teacherService.getTeachersByName(name);
+                asyncResponse.resume(Response.ok(teachers).build());
+            } catch (Exception e) {
+                asyncResponse.resume(Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build());
+            }
+        });
+    }
+
 }
