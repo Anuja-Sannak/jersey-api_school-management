@@ -1,10 +1,14 @@
 package com.api.dao;
 
 import com.api.model.Student;
+import com.api.model.Teacher;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Fetch;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Root;
 
@@ -78,7 +82,14 @@ public class StudentRepository {
     	CriteriaQuery<Student> criteriaQuery = criteriaBuilder.createQuery(Student.class);
     	Root<Student> student = criteriaQuery.from(Student.class);
     	
-    	criteriaQuery.select(student);
+    	Fetch<Student, Teacher> teacherFetch = student.fetch("teacher", JoinType.LEFT);
+
+       
+        Fetch<Object, Object> z = ((Join<Student, Teacher>) teacherFetch).fetch("subject", JoinType.LEFT);
+ 
+        student.fetch("subject", JoinType.LEFT);
+
+        criteriaQuery.select(student).distinct(true);
     	
     	 List<Student> students = em.createQuery(criteriaQuery)
                  .setFirstResult((page - 1) * size) 
@@ -86,34 +97,12 @@ public class StudentRepository {
                  .getResultList();
 
          
-         students.forEach(s -> {
+  /*       students.forEach(s -> {
              s.getTeacher().size();  
              s.getSubject().size();   
              s.getTeacher().forEach(t -> t.getSubject().size());
          }); 
-         
-         
-         System.out.println("=== Page " + page + " (size " + size + ") ===");
-         students.forEach(s -> {
-             System.out.println("Student: " + s.getName() + " | ID: " + s.getStudent_id());
-             
-             System.out.println("  Subjects:");
-             s.getSubject().forEach(sub -> 
-                 System.out.println("    " + sub.getName() + " (ID: " + sub.getSubject_id() + ")")
-             );
-
-             System.out.println("  Teachers:");
-             s.getTeacher().forEach(t -> {
-                 System.out.println("    " + t.getName() + " (ID: " + t.getTeacher_id() + ")");
-                 System.out.println("      Subjects:");
-                 t.getSubject().forEach(tsub ->
-                     System.out.println("        " + tsub.getName() + " (ID: " + tsub.getSubject_id() + ")")
-                 );
-             });
-
-             System.out.println("-------------------------------------");
-         });
-
+         */
              
     	em.close();
     	return students;
@@ -176,7 +165,9 @@ public class StudentRepository {
         Root<Student> student = criteriaQuery.from(Student.class);
 
        
-        student.fetch("teacher", JoinType.LEFT);
+        student.fetch("teacher", JoinType.LEFT).fetch("subject", JoinType.LEFT);
+
+     // Fetch student -> subject (if student has subjects)
         student.fetch("subject", JoinType.LEFT);
 
         criteriaQuery.select(student)

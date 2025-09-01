@@ -41,7 +41,7 @@ public class StudentResource {
                 List<Student> students = studentService.getAllStudents(page, size);
                 
                 
-                long total = studentService.getTotalStudents();
+                long total = studentService.getTotalStudents();    //here count() method call
                 long totalPages = (long) Math.ceil((double) total / size);
 
                 asyncResponse.resume(Response.ok(
